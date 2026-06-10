@@ -1,0 +1,2 @@
+This folder is used for File Integrity Monitor demo.
+Modify or delete these files to trigger FIM alerts.

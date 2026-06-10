@@ -1,0 +1,107 @@
+.about-page {
+  background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,.07), transparent 55%), var(--bg);
+}
+.about-hero { text-align: center; padding: 2.5rem 1.25rem 2rem; border-bottom: 1px solid var(--border); }
+.hero-lead { color: var(--muted); font-size: .92rem; max-width: 520px; margin: .6rem auto 0; }
+
+.about-main { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+.about-block {
+  position: relative; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.4rem 1.25rem; margin-bottom: 1.15rem;
+}
+.about-block h2 { font-size: 1rem; color: #fcd34d; margin-bottom: .6rem; font-family: 'JetBrains Mono', monospace; }
+.about-block > p { font-size: .86rem; color: var(--muted); line-height: 1.65; }
+.section-num {
+  position: absolute; top: 1rem; right: 1rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: rgba(245,158,11,.35);
+}
+
+.tag-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .85rem; }
+.tag {
+  font-size: .66rem; font-family: 'JetBrains Mono', monospace;
+  padding: .22rem .5rem; border-radius: 999px;
+  border: 1px solid rgba(245,158,11,.35); color: #fcd34d;
+  background: rgba(245,158,11,.06);
+}
+
+/* Animated flow diagram */
+.flow-diagram {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: .35rem; margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 10px;
+}
+.flow-node {
+  padding: .5rem .75rem; border: 1px solid var(--border); border-radius: 8px;
+  font-size: .72rem; font-family: 'JetBrains Mono', monospace; color: var(--muted);
+  animation: flow-glow 3s ease infinite;
+}
+.flow-node:nth-child(1) { animation-delay: 0s; }
+.flow-node:nth-child(3) { animation-delay: .6s; }
+.flow-node:nth-child(5) { animation-delay: 1.2s; }
+.flow-node:nth-child(7) { animation-delay: 1.8s; }
+.flow-node:nth-child(9) { animation-delay: 2.4s; }
+.flow-arrow { color: var(--accent); font-size: .9rem; animation: arrow-pulse 1.5s ease infinite; }
+@keyframes flow-glow {
+  0%, 100% { border-color: var(--border); color: var(--muted); }
+  50% { border-color: var(--accent); color: #fcd34d; box-shadow: 0 0 12px rgba(245,158,11,.2); }
+}
+@keyframes arrow-pulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+
+/* Before / after demo mockup */
+.demo-mockup {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: .75rem; align-items: center;
+  margin-top: 1rem;
+}
+@media (max-width: 600px) { .demo-mockup { grid-template-columns: 1fr; } }
+.mock-panel {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: .85rem;
+}
+.mock-panel h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .5rem; }
+.mock-panel.before h3 { color: var(--green); }
+.mock-panel.after h3 { color: var(--red); }
+.mock-panel pre {
+  font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--muted); line-height: 1.5;
+}
+.mock-arrow { font-size: 1.5rem; color: var(--accent); text-align: center; }
+.mock-alert {
+  margin-top: .5rem; padding: .4rem .5rem; background: rgba(210,153,34,.12);
+  border-left: 3px solid var(--amber); font-size: .68rem; color: var(--amber);
+  font-family: 'JetBrains Mono', monospace; animation: alert-pop .5s ease .3s both;
+}
+@keyframes alert-pop { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: none; } }
+
+.flow-steps { display: flex; flex-direction: column; gap: .65rem; margin-top: .85rem; }
+.flow-step {
+  display: flex; gap: .75rem; padding: .75rem; background: var(--bg);
+  border-radius: 8px; border-left: 3px solid var(--accent);
+}
+.flow-step span {
+  flex-shrink: 0; width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: rgba(245,158,11,.15); color: #fcd34d;
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.flow-step strong { display: block; font-size: .82rem; margin-bottom: .15rem; }
+.flow-step p { font-size: .78rem; color: var(--muted); }
+
+.type-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; margin-top: .85rem; }
+@media (max-width: 640px) { .type-cards { grid-template-columns: 1fr; } }
+.type-card { padding: .85rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); }
+.type-card h3 { font-size: .75rem; font-family: 'JetBrains Mono', monospace; margin-bottom: .3rem; }
+.type-card p { font-size: .74rem; color: var(--muted); }
+.type-card.created h3 { color: var(--green); }
+.type-card.modified h3 { color: var(--amber); }
+.type-card.deleted h3 { color: var(--red); }
+
+.bullet-list { list-style: none; margin-top: .75rem; display: flex; flex-direction: column; gap: .45rem; }
+.bullet-list li { font-size: .82rem; color: var(--muted); padding-left: 1rem; position: relative; }
+.bullet-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+
+.about-cta { text-align: center; padding: 1.5rem 1rem; }
+.cta-note { font-size: .88rem; color: var(--muted); margin-bottom: .85rem; }
+.btn-continue {
+  display: inline-block; padding: .8rem 1.75rem;
+  background: linear-gradient(135deg, #b45309, #f59e0b);
+  color: #fff; text-decoration: none; font-weight: 600; font-size: .9rem;
+  border-radius: 10px; font-family: 'JetBrains Mono', monospace;
+}
+.disclaimer { font-size: .7rem; color: var(--muted); max-width: 420px; margin: 1rem auto 0; }

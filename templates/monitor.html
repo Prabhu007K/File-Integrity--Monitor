@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Integrity Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="monitor-page">
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="header">
+    <p class="terminal-prompt">root@fim:~$ watch --hash sha256 ./watch_demo</p>
+    <h1 class="glow-title">File Integrity Monitor</h1>
+    <p class="header-sub">SHA-256 baseline · live dashboard · guided demo walkthrough</p>
+  </header>
+
+  <section class="dashboard-strip" id="dashboard">
+    <div class="dash-card"><span class="dash-label">Files watched</span><strong id="dash-files">0</strong></div>
+    <div class="dash-card"><span class="dash-label">Integrity</span><strong id="dash-score" class="score-ok">100%</strong></div>
+    <div class="dash-card"><span class="dash-label">Status</span><strong id="dash-status" class="status-idle">Idle</strong></div>
+    <div class="dash-card"><span class="dash-label">Last scan</span><strong id="dash-last" class="mono">—</strong></div>
+    <div class="dash-card"><span class="dash-label">Alerts</span><strong id="dash-alerts">0</strong></div>
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="side-card guide-card">
+        <h2>Guided demo activity</h2>
+        <p class="guide-intro">Follow these steps to see FIM in action:</p>
+        <ol class="guide-steps" id="guide-steps">
+          <li data-step="1"><span class="step-n">1</span><div><strong>Prepare demo folder</strong><p>Click <em>Create / reset demo folder</em> below — sample files will be created for you.</p></div></li>
+          <li data-step="2"><span class="step-n">2</span><div><strong>Copy the path</strong><p>Click <em>Copy path</em> and paste it into the watch directory field.</p></div></li>
+          <li data-step="3"><span class="step-n">3</span><div><strong>Create baseline</strong><p>Hash all files — this is your trusted snapshot.</p></div></li>
+          <li data-step="4"><span class="step-n">4</span><div><strong>Start monitoring</strong><p>Turn on automatic checks every few seconds.</p></div></li>
+          <li data-step="5"><span class="step-n">5</span><div><strong>Edit a file</strong><p>Open <code>sample.txt</code> in the demo folder, change a word, and save.</p></div></li>
+          <li data-step="6"><span class="step-n">6</span><div><strong>See the alert</strong><p>A MODIFIED alert appears once with the change time and hash diff.</p></div></li>
+          <li data-step="7"><span class="step-n">7</span><div><strong>Export report</strong><p>Download CSV for your records (optional).</p></div></li>
+          <li data-step="8"><span class="step-n">8</span><div><strong>Accept change</strong><p>If the edit was legitimate, click <em>Update baseline</em>.</p></div></li>
+        </ol>
+        <p class="guide-progress" id="guide-progress">0 / 8 steps</p>
+        <div class="guide-actions">
+          <button type="button" id="demo-create-btn" class="btn-accent">Create / reset demo folder</button>
+          <button type="button" id="copy-path-btn" class="btn-ghost">Copy path</button>
+        </div>
+      </section>
+
+      <section class="side-card">
+        <h2>Baseline history</h2>
+        <ul id="history-list" class="history-list"><li class="muted">No history yet</li></ul>
+      </section>
+    </aside>
+
+    <div class="main-col">
+      <nav class="step-wizard" id="step-wizard">
+        <div class="wizard-step" data-w="1"><span>1</span> Baseline</div>
+        <div class="wizard-step" data-w="2"><span>2</span> Monitor</div>
+        <div class="wizard-step" data-w="3"><span>3</span> Alerts</div>
+      </nav>
+
+      <section class="card" id="section-baseline">
+        <h2>Step 1 — Set watch directory & baseline</h2>
+        <div class="row">
+          <input type="text" id="dir-path" placeholder="Paste folder path here">
+          <button id="use-demo-btn" class="btn-ghost">Use demo path</button>
+          <button id="baseline-btn" class="btn-primary">Create baseline</button>
+        </div>
+        <p class="status" id="baseline-status">No baseline yet</p>
+
+        <div class="integrity-wrap hidden" id="integrity-wrap">
+          <div class="integrity-ring" id="integrity-ring">
+            <span id="integrity-pct">100%</span>
+          </div>
+          <p class="integrity-caption" id="integrity-caption">All files match baseline</p>
+        </div>
+
+        <h3 class="subhead">Watched files</h3>
+        <div class="file-tree-wrap">
+          <table class="file-tree" id="file-tree">
+            <thead><tr><th>File</th><th>Status</th><th>Hash</th><th>Size</th></tr></thead>
+            <tbody id="file-tree-body"><tr><td colspan="4" class="empty-cell">Create a baseline to see files</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" id="section-monitor">
+        <h2>Step 2 — Monitor</h2>
+        <div class="row monitor-row">
+          <label class="interval-label">Interval (sec)
+            <input type="number" id="interval" value="5" min="2" max="60">
+          </label>
+          <button id="start-btn" class="btn-green">Start monitoring</button>
+          <button id="stop-btn" class="btn-red" disabled>Stop</button>
+          <button id="scan-btn" class="btn-secondary">Scan now</button>
+        </div>
+        <p class="status monitor-status-line" id="monitor-status">
+          <span class="pulse-dot" id="pulse-dot"></span>
+          Monitoring stopped
+        </p>
+      </section>
+
+      <section class="card alerts-card" id="section-alerts">
+        <div class="alerts-head">
+          <h2>Step 3 — Alerts timeline</h2>
+          <div class="alert-actions">
+            <button type="button" id="export-csv" class="btn-ghost">Export CSV</button>
+            <button type="button" id="update-baseline-btn" class="btn-accent">Update baseline (accept changes)</button>
+          </div>
+        </div>
+        <p class="alerts-note">Each change is reported once with timestamp and hash diff.</p>
+        <div id="alert-empty" class="empty-state">
+          <div class="empty-icon">🛡</div>
+          <p><strong>All clear</strong></p>
+          <p>When files match the baseline, you're secure. Edit <code>sample.txt</code> during the guided demo to trigger an alert.</p>
+        </div>
+        <ul id="alert-list" class="timeline hidden"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Educational FIM demo · <a href="{{ url_for('about') }}" class="footer-link">About</a></p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

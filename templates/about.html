@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — File Integrity Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+</head>
+<body class="about-page">
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="about-hero">
+    <p class="terminal-prompt">root@fim:~$ cat integrity-policy.md</p>
+    <h1 class="glow-title">File Integrity Monitoring</h1>
+    <p class="hero-lead">Detect unauthorized file changes before they become a breach — baseline, hash, compare, alert.</p>
+  </header>
+
+  <main class="about-main">
+    <section class="about-block">
+      <span class="section-num">01</span>
+      <h2>What is this tool?</h2>
+      <p>A <strong>File Integrity Monitor (FIM)</strong> watches a folder on your system, builds a trusted snapshot (baseline), and alerts you when files are <strong>created</strong>, <strong>modified</strong>, or <strong>deleted</strong>. It is used in security operations to spot tampering, malware drops, and config changes.</p>
+      <div class="tag-row">
+        <span class="tag">SHA-256 hashing</span>
+        <span class="tag">Baseline compare</span>
+        <span class="tag">One alert per change</span>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">02</span>
+      <h2>How does it work?</h2>
+      <div class="flow-diagram" aria-hidden="true">
+        <span class="flow-node">File</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">SHA-256</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">Baseline</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">Compare</span>
+        <span class="flow-arrow">→</span>
+        <span class="flow-node">Alert</span>
+      </div>
+      <div class="flow-steps" style="margin-top:1rem">
+        <div class="flow-step"><span>1</span><div><strong>Create baseline</strong><p>Every file is hashed — fingerprints saved as “known good”.</p></div></div>
+        <div class="flow-step"><span>2</span><div><strong>Monitor</strong><p>Re-hash on a timer and compare to baseline.</p></div></div>
+        <div class="flow-step"><span>3</span><div><strong>Alert once</strong><p>Single timestamped alert per change — no spam.</p></div></div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">03</span>
+      <h2>Before & after — what you’ll see</h2>
+      <div class="demo-mockup">
+        <div class="mock-panel before">
+          <h3>Before edit</h3>
+          <pre>sample.txt
+hash: e3b0c442…
+Status: ✓ OK</pre>
+        </div>
+        <div class="mock-arrow">→</div>
+        <div class="mock-panel after">
+          <h3>After edit</h3>
+          <pre>sample.txt
+hash: 9f86d081…
+Status: ⚠ MODIFIED</pre>
+          <div class="mock-alert">MODIFIED · Changed at 2026-06-07 15:42:18</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">04</span>
+      <h2>Why SHA-256?</h2>
+      <p>A hash is a fixed-length fingerprint of file content. Change one byte and the hash changes completely — so you detect tampering without storing full file copies.</p>
+      <div class="code-card">
+        <pre>baseline:  sample.txt → e3b0c44298fc1c149afbf4c8996fb924...
+after edit: sample.txt → 9f86d081884c7d659a2feaa0c55ad015...</pre>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">05</span>
+      <h2>Alert types</h2>
+      <div class="type-cards">
+        <article class="type-card created"><h3>CREATED</h3><p>A new file appeared that was not in the baseline.</p></article>
+        <article class="type-card modified"><h3>MODIFIED</h3><p>Same path, different hash — content was altered.</p></article>
+        <article class="type-card deleted"><h3>DELETED</h3><p>A file from the baseline is missing.</p></article>
+      </div>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">06</span>
+      <h2>Real-world use</h2>
+      <ul class="bullet-list">
+        <li>Detect malware or webshell drops in web directories</li>
+        <li>Watch critical config files (<code>/etc</code>, app settings)</li>
+        <li>Compliance requirements (PCI-DSS, SOC 2, NIST)</li>
+        <li>Post-incident forensics — know what changed and when</li>
+      </ul>
+    </section>
+
+    <section class="about-block">
+      <span class="section-num">07</span>
+      <h2>Guided demo activity</h2>
+      <p>On the monitor page, follow the <strong>8-step walkthrough</strong>: create demo folder → copy path → baseline → monitor → edit file → see alert → export → accept change.</p>
+      <a href="{{ url_for('monitor_page') }}?guide=1" class="btn-continue" style="display:inline-block;margin-top:.85rem;font-size:.82rem;padding:.65rem 1.25rem">Start guided demo →</a>
+    </section>
+
+    <section class="about-cta">
+      <p class="cta-note">Ready to monitor files?</p>
+      <a href="{{ url_for('monitor_page') }}" class="btn-continue">Continue to monitor →</a>
+      <p class="disclaimer">Run locally for best results. Requires filesystem access — not suited for static hosts like Netlify.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>File Integrity Monitor · <a href="{{ url_for('monitor_page') }}" class="footer-link">Dashboard</a></p>
+  </footer>
+</body>
+</html>
