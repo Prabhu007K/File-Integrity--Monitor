@@ -1,0 +1,10 @@
+# Runtime scan data — created when you click "Create baseline"
+baseline.json
+baseline_history.json
+
+# Python
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
